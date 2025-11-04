@@ -59,17 +59,27 @@ const Survey = () => {
 
   const sendData = async () => {
     try {
-      generateFakeData();
+      console.log('Starting data submission...');
+      console.log('Form data:', data);
+
+      // generateFakeData(); // Removed - don't overwrite user input
       const hashedData = hashData();
-      const {data, error} = await supabase
+      console.log('Hashed data:', hashedData);
+
+      const {data: result, error} = await supabase
         .from('fable')
         .insert({hash_data: hashedData});
-      if (data) {
-        // console.log(data);
+
+      if (error) {
+        console.log('Supabase error:', error);
+        throw error;
       }
-      if (error) throw error;
+
+      console.log('Data submitted successfully:', result);
+      alert('Survey submitted successfully!');
     } catch (error) {
-      console.log('Error', error.message);
+      console.log('Error submitting data:', error.message);
+      alert('Error submitting survey: ' + error.message);
     }
   };
 
